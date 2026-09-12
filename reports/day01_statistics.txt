@@ -1,0 +1,66 @@
+=== RAW DATA QUALITY ===
+Rows before cleaning: 3453
+Missing text rows: 0
+Duplicated rows: 5
+Rows after cleaning: 3448
+
+=== DATASET SHAPE ===
+(3448, 4)
+
+=== FIRST 5 ROWS ===
+                                                                                                                                                                                                          text sentiment  text_length  word_count
+                                                                               According to Gran , the company has no plans to move all production to Russia , although that is where the company is growing .   neutral          127          25
+With the new production plant the company would increase its capacity to meet the expected increase in demand and would improve the use of raw materials and therefore increase the production profitability .  positive          206          33
+             For the last quarter of 2010 , Componenta 's net sales doubled to EUR131m from EUR76m for the same period a year earlier , while it moved to a zero pre-tax profit from a pre-tax loss of EUR7m .  positive          193          39
+                                                                                 In the third quarter of 2010 , net sales increased by 5.2 % to EUR 205.5 mn , and operating profit by 34.9 % to EUR 23.5 mn .  positive          125          29
+                                                                                    Operating profit rose to EUR 13.1 mn from EUR 8.7 mn in the corresponding period in 2007 representing 7.7 % of net sales .  positive          122          24
+
+=== DATAFRAME INFO ===
+<class 'pandas.core.frame.DataFrame'>
+Index: 3448 entries, 0 to 3452
+Data columns (total 4 columns):
+ #   Column       Non-Null Count  Dtype 
+---  ------       --------------  ----- 
+ 0   text         3448 non-null   object
+ 1   sentiment    3448 non-null   object
+ 2   text_length  3448 non-null   int64 
+ 3   word_count   3448 non-null   int64 
+dtypes: int64(2), object(2)
+memory usage: 134.7+ KB
+
+=== MISSING VALUES AFTER CLEANING ===
+text           0
+sentiment      0
+text_length    0
+word_count     0
+
+=== DUPLICATED ROWS AFTER CLEANING ===
+0
+
+=== CLASS DISTRIBUTION ===
+sentiment
+neutral     2141
+positive     887
+negative     420
+
+=== TEXT LENGTH STATISTICS ===
+       text_length   word_count
+count  3448.000000  3448.000000
+mean    124.813805    22.752030
+std      56.310040    10.050943
+min       9.000000     2.000000
+25%      81.000000    15.000000
+50%     116.000000    21.000000
+75%     160.000000    29.000000
+max     315.000000    81.000000
+
+=== EXAMPLES BY CLASS ===
+
+[negative]
+Jan. 6 -- Ford is struggling in the face of slowing truck and SUV sales and a surfeit of up-to-date , gotta-have cars .
+
+[neutral]
+According to Gran , the company has no plans to move all production to Russia , although that is where the company is growing .
+
+[positive]
+With the new production plant the company would increase its capacity to meet the expected increase in demand and would improve the use of raw materials and therefore increase the production profitability .
