@@ -1,0 +1,17 @@
+=== DAY 2 PREPROCESSING ===
+Rows in raw dataset: 3453
+Rows after Day 1 structural cleaning: 3448
+Empty texts removed after preprocessing: 0
+Rows after preprocessing: 3448
+Duplicate cleaned texts: 0
+Duplicate cleaned text + label: 0
+Cleaned texts with conflicting labels: 0
+
+=== LABEL DISTRIBUTION ===
+sentiment
+neutral     2141
+positive     887
+negative     420
+
+=== PROCESSED COLUMNS ===
+text, sentiment, text_clean, label, word_count_clean, char_count, dollar_count, number_count
