@@ -45,3 +45,7 @@ data/raw/*
 
 data/processed/*
 !data/processed/.gitkeep
+
+# Generated model artifacts
+models/*
+!models/.gitkeep

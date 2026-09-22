@@ -1,0 +1,16 @@
+{
+  "accuracy": 0.8347826086956521,
+  "macro_f1": 0.7529847180351511,
+  "weighted_f1": 0.8215956193992349,
+  "model": "LogisticRegression",
+  "vectorizer": "TfidfVectorizer",
+  "ngram_range": [
+    1,
+    1
+  ],
+  "max_iter": 1000,
+  "train_size": 2758,
+  "test_size": 690,
+  "test_fraction": 0.2,
+  "random_state": 42
+}

@@ -24,6 +24,7 @@
 Распределение классов:
 
 | Класс | Количество |
+|---|---:|
 | neutral | 2141 |
 | positive | 887 |
 | negative | 420 |
@@ -45,10 +46,17 @@
 - проверка пустых текстов, новых дубликатов и конфликтующих меток
 - простые диагностические признаки текста
 - автоматические тесты preprocessing
+- baseline pipeline `TF-IDF + Logistic Regression`
+- stratified train/test split 80/20
+- расчёт Accuracy, Macro F1 и Weighted F1
+- classification report с метриками по каждому классу
+- сохранение baseline-метрик и модели
+- автоматические тесты baseline pipeline и метрик
 
 Метки классов:
 
 | Класс | Label |
+|---|---:|
 | negative | 0 |
 | neutral | 1 |
 | positive | 2 |
@@ -91,6 +99,12 @@ python -m finnews_sentiment.features.preprocess
 python -m unittest discover -s tests -v
 ```
 
+Обучение baseline-модели:
+
+```powershell
+python -m finnews_sentiment.models.train_model
+```
+
 ## Результаты
 
 Отчёты и графики сохраняются в `reports/`:
@@ -101,6 +115,8 @@ reports/
 ├── day01_observations.md
 ├── day02_preprocessing_report.txt
 ├── day02_examples.md
+├── day03_baseline_metrics.json
+├── day03_classification_report.txt
 └── figures/
     ├── sentiment_distribution.png
     └── text_length_distribution.png
@@ -123,6 +139,7 @@ classification_overall/
 │   ├── raw/
 │   └── processed/
 ├── docs/
+├── models/
 ├── notebooks/
 ├── reports/
 ├── src/
@@ -132,7 +149,64 @@ classification_overall/
 │       ├── models/
 │       └── visualization/
 ├── tests/
+│   ├── test_preprocess.py
+│   └── test_train_model.py
 ├── pyproject.toml
 ├── requirements.txt
 └── README.md
+```
+
+## Baseline модель
+
+В качестве первой точки отсчёта используется классический pipeline:
+
+```text
+text_clean
+→ TF-IDF
+→ Logistic Regression
+```
+
+Данные разделяются на train и test в пропорции 80/20 с сохранением распределения классов (`stratify`).
+
+Параметры baseline хранятся в:
+
+```text
+configs/train_baseline.json
+```
+
+Запуск обучения:
+
+```powershell
+python -m finnews_sentiment.models.train_model
+```
+
+Текущий baseline:
+
+| Метрика | Значение |
+|---|---:|
+| Accuracy | 0.8348 |
+| Macro F1 | 0.7530 |
+| Weighted F1 | 0.8216 |
+
+F1 по классам:
+
+| Класс | F1 |
+|---|---:|
+| negative | 0.6290 |
+| neutral | 0.8957 |
+| positive | 0.7342 |
+
+Baseline заметно лучше распознаёт преобладающий класс `neutral`, в то время как recall класса `negative` составляет 0.4643. Поэтому основной метрикой дальнейшего сравнения моделей используется Macro F1.
+
+Результаты сохраняются в:
+
+```text
+reports/day03_baseline_metrics.json
+reports/day03_classification_report.txt
+```
+
+Локально также создаётся baseline-модель:
+
+```text
+models/baseline_logreg.joblib
 ```

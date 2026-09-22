@@ -1,8 +1,11 @@
 {
-  "input_path": "data/processed/clean_news.csv",
+  "input_path": "data/processed/financial_phrasebank_75agree_processed.csv",
   "model_path": "models/baseline_logreg.joblib",
-  "text_col": "text",
-  "target_col": "sentiment",
+  "metrics_path": "reports/day03_baseline_metrics.json",
+  "classification_report_path": "reports/day03_classification_report.txt",
+  "text_col": "text_clean",
+  "target_col": "label",
   "test_size": 0.2,
-  "random_state": 42
+  "random_state": 42,
+  "max_iter": 1000
 }
