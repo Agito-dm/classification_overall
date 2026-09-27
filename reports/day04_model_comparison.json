@@ -1,0 +1,34 @@
+[
+  {
+    "model": "linear_svc",
+    "accuracy": 0.8608695652173913,
+    "macro_f1": 0.8112990824614604,
+    "weighted_f1": 0.8562751996662724,
+    "macro_f1_absolute_gain": 0.05831436442630933,
+    "macro_f1_relative_gain_pct": 7.744428675587953
+  },
+  {
+    "model": "balanced_lr",
+    "accuracy": 0.8449275362318841,
+    "macro_f1": 0.8014647094207362,
+    "weighted_f1": 0.8420972822173043,
+    "macro_f1_absolute_gain": 0.04847999138558512,
+    "macro_f1_relative_gain_pct": 6.438376533336491
+  },
+  {
+    "model": "baseline",
+    "accuracy": 0.8347826086956521,
+    "macro_f1": 0.7529847180351511,
+    "weighted_f1": 0.8215956193992349,
+    "macro_f1_absolute_gain": 0.0,
+    "macro_f1_relative_gain_pct": 0.0
+  },
+  {
+    "model": "bigrams_lr",
+    "accuracy": 0.827536231884058,
+    "macro_f1": 0.7464496670299692,
+    "weighted_f1": 0.812803547107661,
+    "macro_f1_absolute_gain": -0.006535051005181924,
+    "macro_f1_relative_gain_pct": -0.8678862729425079
+  }
+]

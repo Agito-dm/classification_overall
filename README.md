@@ -117,9 +117,13 @@ reports/
 ├── day02_examples.md
 ├── day03_baseline_metrics.json
 ├── day03_classification_report.txt
+├── day04_model_comparison.csv
+├── day04_model_comparison.json
+├── day04_best_classification_report.txt
 └── figures/
     ├── sentiment_distribution.png
-    └── text_length_distribution.png
+    ├── text_length_distribution.png
+    └── day04_macro_f1_comparison.png
 ```
 
 Обработанный датасет создаётся локально:
@@ -147,8 +151,11 @@ classification_overall/
 │       ├── data/
 │       ├── features/
 │       ├── models/
+│       │   ├── compare_models.py
+│       │   └── train_model.py
 │       └── visualization/
 ├── tests/
+│   ├── test_compare_models.py
 │   ├── test_preprocess.py
 │   └── test_train_model.py
 ├── pyproject.toml
@@ -210,3 +217,38 @@ reports/day03_classification_report.txt
 ```text
 models/baseline_logreg.joblib
 ```
+
+Сравнение вариантов модели:
+
+```powershell
+python -m finnews_sentiment.models.compare_models
+```
+
+
+```markdown
+- сохранение baseline-метрик и модели
+- автоматические тесты baseline pipeline и метрик
+- сравнение unigram/bigram TF-IDF, balanced Logistic Regression и LinearSVC
+- автоматический выбор лучшей модели по Macro F1
+- сохранение сравнительных метрик, classification report и графика
+```
+
+## Улучшение модели
+
+Проверены три изменения baseline:
+
+| Вариант | Macro F1 |
+|---|---:|
+| Baseline Logistic Regression | 0.7530 |
+| TF-IDF bigrams + Logistic Regression | 0.7464 |
+| Balanced Logistic Regression | 0.8015 |
+| LinearSVC | 0.8113 |
+
+Лучший результат показал `LinearSVC`.
+
+Macro F1 вырос с `0.7530` до `0.8113`:
+
+- абсолютный прирост – `+0.0583`
+- относительный прирост – `+7.74%`
+
+Использование bigrams отдельно улучшения не дало, а учёт дисбаланса классов заметно повысил качество Logistic Regression.

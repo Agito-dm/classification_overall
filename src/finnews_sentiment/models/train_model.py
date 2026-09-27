@@ -76,6 +76,31 @@ def load_processed_dataset(
     return df
 
 
+def split_dataset(
+    df: pd.DataFrame,
+    text_col: str,
+    target_col: str,
+    test_size: float,
+    random_state: int,
+) -> tuple[
+    pd.Series,
+    pd.Series,
+    pd.Series,
+    pd.Series,
+]:
+    """Разделяет данные на train/test с сохранением пропорций классов."""
+    X = df[text_col]
+    y = df[target_col]
+
+    return train_test_split(
+        X,
+        y,
+        test_size=test_size,
+        random_state=random_state,
+        stratify=y,
+    )
+
+
 def build_baseline_pipeline(
     max_iter: int,
     random_state: int,
@@ -158,20 +183,17 @@ def main(config_path: Path) -> None:
         target_col=target_col,
     )
 
-    X = df[text_col]
-    y = df[target_col]
-
     (
         X_train,
         X_test,
         y_train,
         y_test,
-    ) = train_test_split(
-        X,
-        y,
+    ) = split_dataset(
+        df,
+        text_col=text_col,
+        target_col=target_col,
         test_size=config["test_size"],
         random_state=config["random_state"],
-        stratify=y,
     )
 
     pipeline = build_baseline_pipeline(
