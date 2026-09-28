@@ -50,8 +50,10 @@
 - stratified train/test split 80/20
 - расчёт Accuracy, Macro F1 и Weighted F1
 - classification report с метриками по каждому классу
-- сохранение baseline-метрик и модели
-- автоматические тесты baseline pipeline и метрик
+- сравнение baseline с bigrams, balanced Logistic Regression и LinearSVC
+- confusion matrix для лучшей модели
+- анализ направлений и реальных примеров ошибок
+- фиксация основных failure cases
 
 Метки классов:
 
@@ -105,6 +107,12 @@ python -m unittest discover -s tests -v
 python -m finnews_sentiment.models.train_model
 ```
 
+Анализ ошибок лучшей модели:
+
+```powershell
+python -m finnews_sentiment.models.error_analysis
+```
+
 ## Результаты
 
 Отчёты и графики сохраняются в `reports/`:
@@ -120,10 +128,15 @@ reports/
 ├── day04_model_comparison.csv
 ├── day04_model_comparison.json
 ├── day04_best_classification_report.txt
+├── day05_confusion_matrix.csv
+├── day05_error_directions.csv
+├── day05_error_analysis.md
+├── day05_errors.csv
 └── figures/
     ├── sentiment_distribution.png
     ├── text_length_distribution.png
-    └── day04_macro_f1_comparison.png
+    ├── day04_macro_f1_comparison.png
+    └── day05_confusion_matrix.png
 ```
 
 Обработанный датасет создаётся локально:
@@ -152,10 +165,12 @@ classification_overall/
 │       ├── features/
 │       ├── models/
 │       │   ├── compare_models.py
+│       │   ├── error_analysis.py
 │       │   └── train_model.py
 │       └── visualization/
 ├── tests/
 │   ├── test_compare_models.py
+│   ├── test_error_analysis.py
 │   ├── test_preprocess.py
 │   └── test_train_model.py
 ├── pyproject.toml
@@ -218,20 +233,13 @@ reports/day03_classification_report.txt
 models/baseline_logreg.joblib
 ```
 
-Сравнение вариантов модели:
+Сравнение моделей:
 
 ```powershell
 python -m finnews_sentiment.models.compare_models
 ```
 
 
-```markdown
-- сохранение baseline-метрик и модели
-- автоматические тесты baseline pipeline и метрик
-- сравнение unigram/bigram TF-IDF, balanced Logistic Regression и LinearSVC
-- автоматический выбор лучшей модели по Macro F1
-- сохранение сравнительных метрик, classification report и графика
-```
 
 ## Улучшение модели
 
@@ -252,3 +260,23 @@ Macro F1 вырос с `0.7530` до `0.8113`:
 - относительный прирост – `+7.74%`
 
 Использование bigrams отдельно улучшения не дало, а учёт дисбаланса классов заметно повысил качество Logistic Regression.
+
+
+## Error analysis
+
+Для `LinearSVC` на test set получено 96 ошибок из 690 примеров.
+
+Наиболее частые направления ошибок:
+
+- positive → neutral – 42
+- negative → neutral – 19
+- neutral → positive – 18
+- negative → positive – 13
+
+61 из 96 ошибок связаны с отнесением positive или negative примеров к neutral.
+
+Подробный анализ и реальные примеры находятся в:
+
+```text
+reports/day05_error_analysis.md
+reports/day05_errors.csv

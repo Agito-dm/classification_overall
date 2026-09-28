@@ -1,0 +1,7 @@
+true_sentiment,predicted_sentiment,count,share_of_errors_pct
+positive,neutral,42,43.75
+negative,neutral,19,19.791666666666664
+neutral,positive,18,18.75
+negative,positive,13,13.541666666666666
+neutral,negative,2,2.083333333333333
+positive,negative,2,2.083333333333333
