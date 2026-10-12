@@ -275,8 +275,40 @@ Macro F1 вырос с `0.7530` до `0.8113`:
 
 61 из 96 ошибок связаны с отнесением positive или negative примеров к neutral.
 
+
 Подробный анализ и реальные примеры находятся в:
 
 ```text
 reports/day05_error_analysis.md
 reports/day05_errors.csv
+```
+
+## Inference
+
+Финальная модель использует TF-IDF (unigram) и LinearSVC.
+
+Для inference модель обучается на всех 3448 обработанных примерах. Macro F1 = 0.8113 относится к holdout-оценке конфигурации до финального переобучения.
+
+Обучение и сохранение модели:
+
+```powershell
+python -m finnews_sentiment.models.train_best_model
+```
+
+Обученный Pipeline сохраняется в `models/best_model.joblib` и включает TF-IDF vectorizer и LinearSVC.
+
+Предсказание:
+
+```powershell
+python -m finnews_sentiment.models.predict --text "The company reported strong revenue growth."
+```
+
+Для нескольких текстов параметр `--text` можно повторить.
+
+Вход – исходный английский текст финансовой новости.
+
+Выход – исходный текст (`text`), название класса (`sentiment`) и числовая метка (`label`).
+
+Preprocessing выполняется автоматически. Повторное обучение при inference не требуется.
+
+Файл модели не хранится в Git и воспроизводится командой обучения.

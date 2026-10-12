@@ -8,8 +8,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 from sklearn.pipeline import Pipeline
-from sklearn.svm import LinearSVC
 
+from finnews_sentiment.models.best_model import (
+    build_best_pipeline,
+)
 from finnews_sentiment.models.train_model import (
     build_baseline_pipeline,
     evaluate_model,
@@ -67,21 +69,8 @@ def build_experiment_pipelines(
                 ),
             ]
         ),
-        "linear_svc": Pipeline(
-            [
-                (
-                    "tfidf",
-                    TfidfVectorizer(
-                        ngram_range=(1, 1),
-                    ),
-                ),
-                (
-                    "classifier",
-                    LinearSVC(
-                        random_state=random_state,
-                    ),
-                ),
-            ]
+        "linear_svc": build_best_pipeline(
+            random_state=random_state,
         ),
     }
 

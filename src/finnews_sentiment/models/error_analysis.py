@@ -8,8 +8,9 @@ from sklearn.metrics import (
     confusion_matrix,
 )
 
-from finnews_sentiment.models.compare_models import (
-    build_experiment_pipelines,
+from finnews_sentiment.models.best_model import (
+    BEST_MODEL_NAME,
+    build_best_pipeline,
 )
 from finnews_sentiment.models.train_model import (
     LABEL_IDS,
@@ -19,9 +20,6 @@ from finnews_sentiment.models.train_model import (
     split_dataset,
 )
 from finnews_sentiment.paths import find_project_root
-
-
-BEST_MODEL_NAME = "linear_svc"
 
 
 def build_error_dataframe(
@@ -183,14 +181,9 @@ def main(config_path: Path) -> None:
         random_state=config["random_state"],
     )
 
-    pipelines = build_experiment_pipelines(
-        max_iter=config["max_iter"],
+    model = build_best_pipeline(
         random_state=config["random_state"],
     )
-
-    model = pipelines[
-        BEST_MODEL_NAME
-    ]
 
     model.fit(
         X_train,

@@ -1,50 +1,160 @@
 import argparse
 from pathlib import Path
-from typing import List
 
 import joblib
-import pandas as pd
+from sklearn.pipeline import Pipeline
 
-from finnews_sentiment.features.preprocess import clean_news_data, add_basic_features
+from finnews_sentiment.features.preprocess import clean_text
+from finnews_sentiment.models.train_model import (
+    LABEL_IDS,
+    LABEL_NAMES,
+)
+from finnews_sentiment.paths import find_project_root
 
 
-def load_model(path: Path):
-    bundle = joblib.load(path)
-    return bundle["model"], bundle.get("meta", {})
+ID_TO_LABEL = dict(
+    zip(
+        LABEL_IDS,
+        LABEL_NAMES,
+    )
+)
 
 
-def predict_for_file(model_path: str, input_path: str, output_path: str) -> None:
-    model_p = Path(model_path)
-    input_p = Path(input_path)
-    output_p = Path(output_path)
+def load_model(model_path: Path) -> Pipeline:
+    """Загружает сохранённый обученный Pipeline."""
+    if not model_path.is_file():
+        raise FileNotFoundError(
+            f"Model not found: {model_path}. "
+            "Run train_best_model first."
+        )
 
-    model, meta = load_model(model_p)
-    df = pd.read_csv(input_p)
+    model = joblib.load(
+        model_path
+    )
 
-    df = clean_news_data(df, text_col="text")
-    df = add_basic_features(df)
+    if not isinstance(model, Pipeline):
+        raise TypeError(
+            "Saved model must be a sklearn Pipeline."
+        )
 
-    preds = model.predict(df["text_clean"].astype(str))
-    proba = None
-    if hasattr(model, "predict_proba"):
-        proba = model.predict_proba(df["text_clean"].astype(str))
+    return model
 
-    df_out = df.copy()
-    df_out["pred_sentiment"] = preds
-    if proba is not None:
-        for i, cls in enumerate(model.classes_):
-            df_out[f"proba_{cls}"] = proba[:, i]
 
-    output_p.parent.mkdir(parents=True, exist_ok=True)
-    df_out.to_csv(output_p, index=False)
-    print(f"Сохранён файл с предсказаниями: {output_p}")
+def predict_sentiment(
+    texts: list[str],
+    model: Pipeline,
+) -> list[dict[str, str | int]]:
+    """Классифицирует новые тексты с preprocessing."""
+    if not texts:
+        raise ValueError(
+            "At least one text is required."
+        )
+
+    cleaned_texts = []
+
+    for index, text in enumerate(texts):
+        if not isinstance(text, str):
+            raise ValueError(
+                f"Text at index {index} must be a string."
+            )
+
+        cleaned_text = clean_text(
+            text
+        )
+
+        if not cleaned_text:
+            raise ValueError(
+                f"Text at index {index} is empty after cleaning."
+            )
+
+        cleaned_texts.append(
+            cleaned_text
+        )
+
+    predictions = model.predict(
+        cleaned_texts
+    )
+
+    results = []
+
+    for text, prediction in zip(
+        texts,
+        predictions,
+    ):
+        label = int(prediction)
+
+        results.append(
+            {
+                "text": text,
+                "sentiment": ID_TO_LABEL[label],
+                "label": label,
+            }
+        )
+
+    return results
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Predict financial news sentiment "
+            "using a saved model."
+        )
+    )
+
+    parser.add_argument(
+        "--text",
+        action="append",
+        required=True,
+        help=(
+            "Financial text to classify. "
+            "Repeat for multiple texts."
+        ),
+    )
+
+    parser.add_argument(
+        "--model",
+        type=Path,
+        default=Path(
+            "models/best_model.joblib"
+        ),
+        help="Path to saved model.",
+    )
+
+    args = parser.parse_args()
+
+    project_root = find_project_root()
+    model_path = args.model
+
+    if not model_path.is_absolute():
+        model_path = (
+            project_root
+            / model_path
+        )
+
+    try:
+        model = load_model(
+            model_path
+        )
+
+        results = predict_sentiment(
+            args.text,
+            model,
+        )
+
+    except (FileNotFoundError, TypeError, ValueError) as error:
+        parser.error(
+            str(error)
+        )
+
+    print("=== SENTIMENT PREDICTIONS ===")
+
+    for result in results:
+        print()
+        print(f"Text: {result['text']}")
+        print(f"Sentiment: {result['sentiment']}")
+        print(f"Label: {result['label']}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Инференс модели для файла с новостями.")
-    parser.add_argument("--model", type=str, required=True, help="Путь к модели (joblib).")
-    parser.add_argument("--input", type=str, required=True, help="Путь к CSV с новыми новостями.")
-    parser.add_argument("--output", type=str, required=True, help="Путь для сохранения CSV с предсказаниями.")
-    args = parser.parse_args()
-
-    predict_for_file(args.model, args.input, args.output)
+    main()
