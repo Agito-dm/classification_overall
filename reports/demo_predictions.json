@@ -1,0 +1,44 @@
+[
+  {
+    "case": "Revenue growth",
+    "text": "The company's revenue increased by 18 percent compared with last year.",
+    "sentiment": "positive",
+    "label": 2
+  },
+  {
+    "case": "Corporate meeting",
+    "text": "The company will hold its annual general meeting on Friday.",
+    "sentiment": "neutral",
+    "label": 1
+  },
+  {
+    "case": "Falling profit",
+    "text": "Operating profit fell by 23 percent due to weaker demand.",
+    "sentiment": "negative",
+    "label": 0
+  },
+  {
+    "case": "Lower operating costs",
+    "text": "Operating costs decreased by 12 percent while revenue remained stable.",
+    "sentiment": "negative",
+    "label": 0
+  },
+  {
+    "case": "Mixed financial signals",
+    "text": "Revenue grew, but net profit declined because of higher expenses.",
+    "sentiment": "negative",
+    "label": 0
+  },
+  {
+    "case": "Product announcement",
+    "text": "The company introduced a new smartphone model in Europe.",
+    "sentiment": "neutral",
+    "label": 1
+  },
+  {
+    "case": "Uncertain outlook",
+    "text": "Management warned that demand may weaken next quarter.",
+    "sentiment": "neutral",
+    "label": 1
+  }
+]
